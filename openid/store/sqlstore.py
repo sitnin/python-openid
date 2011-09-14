@@ -374,12 +374,11 @@ class MySQLStore(SQLStore):
 
     create_nonce_sql = """
     CREATE TABLE %(nonces)s (
-        server_url BLOB NOT NULL,
+        server_url VARCHAR(255) NOT NULL,
         timestamp INTEGER NOT NULL,
         salt CHAR(40) NOT NULL,
         PRIMARY KEY (server_url(255), timestamp, salt)
-    )
-    ENGINE=InnoDB;
+    );
     """
 
     create_assoc_sql = """
@@ -387,13 +386,12 @@ class MySQLStore(SQLStore):
     (
         server_url BLOB NOT NULL,
         handle VARCHAR(255) NOT NULL,
-        secret BLOB NOT NULL,
+        secret VARCHAR(255) NOT NULL,
         issued INTEGER NOT NULL,
         lifetime INTEGER NOT NULL,
         assoc_type VARCHAR(64) NOT NULL,
         PRIMARY KEY (server_url(255), handle)
-    )
-    ENGINE=InnoDB;
+    );
     """
 
     set_assoc_sql = ('REPLACE INTO %(associations)s '
