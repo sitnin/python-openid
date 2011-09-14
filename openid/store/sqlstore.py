@@ -13,6 +13,8 @@ from openid.association import Association
 from openid.store.interface import OpenIDStore
 from openid.store import nonce
 
+from base64 import b64encode, b64decode
+
 def _inTxn(func):
     def wrapped(self, *args, **kwargs):
         return self._callInTransaction(func, self, *args, **kwargs)
@@ -414,12 +416,11 @@ class MySQLStore(SQLStore):
     clean_nonce_sql = 'DELETE FROM %(nonces)s WHERE timestamp < %%s;'
 
     def blobDecode(self, blob):
-        if type(blob) is str:
-            # Versions of MySQLdb >= 1.2.2
-            return blob
-        else:
-            # Versions of MySQLdb prior to 1.2.2 (as far as we can tell)
-            return blob.tostring()
+        return b64decode(blob)
+
+    def blobEncode(self, s):
+        return b64encode(s)
+
 
 class PostgreSQLStore(SQLStore):
     """
